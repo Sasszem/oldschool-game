@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -Wall
 LDFLAGS =
-OBJFILES = game.o data.o items.o battles.o doors.o util.o progress.o commands.o
+OBJFILES = game.o data.o items.o battles.o doors.o util.o progress.o commands.o save.o
 TARGET = game
 all: $(TARGET)
 

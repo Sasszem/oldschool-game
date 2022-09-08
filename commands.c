@@ -5,6 +5,7 @@
 #include "data.h"
 #include "util.h"
 #include "progress.h"
+#include "save.h"
 
 typedef uint8_t (*command_callback)(GameState*, const char*);
 
@@ -76,8 +77,16 @@ uint8_t use_item_cmd(GameState *state, const char* item) {
 }
 
 uint8_t quit(GameState *state, const char* item) {
-        printf("Bye!\n");
+        printf("Your savestate: \e[4m");
+        save_state(state);
+        printf("\e[0m\n");
+        printf("\e[7mThank you for playing\e[0m\n");
         return 1;
+}
+
+uint8_t load_game(GameState *state, const char* item) {
+        load_state(state, item);
+        return stats(state, NULL);
 }
 
 Command commands[] = {
@@ -87,7 +96,8 @@ Command commands[] = {
         {"LOOT", "Search for items in the room", loot},
         {"GO TO", "Go to location", go_to},
         {"USE", "Use item", use_item_cmd},
-        {"QUIT", "Quit game", quit},
+        {"QUIT", "Quit game (with saving)", quit},
+        {"LOAD", "Load game from state", load_game},
 };
 
 const int N_CMDS = sizeof(commands) / sizeof(commands[0]);
