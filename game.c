@@ -46,10 +46,9 @@ typedef struct game_state {
 
 GameState state = {{"Jauzsi!"}, 20, 20, 0, 6, 0, 0, {0}, {0}, {0},{0}};
 int main() {
-        uint8_t is_dead = switch_level(&state, 1);
+        uint8_t stopped = switch_level(&state, 1);
         char*line = NULL;
         size_t len = 0;
-        uint8_t stopped = 0;
         while (!stopped) {
 
                 len = 0;
