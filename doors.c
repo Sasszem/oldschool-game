@@ -2,7 +2,7 @@
 #include "data.h"
 #include "util.h"
 
-uint8_t guard_state(GameState *state, uint8_t door_id) {
+uint8_t guard_state(const GameState *state, uint8_t door_id) {
         if (invalid_id(door_id, N_DOORS)) return 0;
 
         const Door *door = &doors[door_id - 1];
