@@ -104,7 +104,8 @@ uint8_t process_door(GameState *state, uint8_t door_id) {
 
 
 const Door doors[] = {
-        {2, 1, 1}
+        {2, 1, 1},
+        {1, 0, 0},
 };
 
 const int N_DOORS = (sizeof(doors)/sizeof(doors[0]));

@@ -18,7 +18,7 @@ void set_health(GameState *state, uint8_t health) {
 
 const Level levels[] = {
         {"First room", 2, {1}, {1,3}},
-        {"Second room", 1, {}, {}},
+        {"Second room", 1, {2}, {}},
 };
 const int N_LEVELS = (sizeof(levels)/sizeof(levels[0]));
 
