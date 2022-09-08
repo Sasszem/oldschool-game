@@ -19,10 +19,10 @@ uint8_t process_battle(GameState *state, uint8_t battle_id) {
         uint8_t enemy_damage = sub_or_zero(battle->enemy_atk, state->armor) + enemy_invincible;
         while (state->health && (enemy_hp || enemy_invincible)) {
                 if (turn) {
-                        printf("%s hits %s! \e[4m-%d HP\e[0m\n", state->name, battle->enemy_name, player_damage);
+                        printf("-> %s hits %s! \e[4m-%d HP\e[0m\n", state->name, battle->enemy_name, player_damage);
                         enemy_hp = sub_or_zero(enemy_hp, player_damage);
                 } else {
-                        printf("%s hits %s! \e[4m-%d HP\e[0m\n", battle->enemy_name, state->name, enemy_damage);
+                        printf("-> %s hits %s! \e[4m-%d HP\e[0m\n", battle->enemy_name, state->name, enemy_damage);
                         state->health = sub_or_zero(state->health, enemy_damage);
                 }
                 turn = 1 - turn;
@@ -35,6 +35,7 @@ uint8_t process_battle(GameState *state, uint8_t battle_id) {
         printf("%s defeated %s\n", state->name, battle->enemy_name);
         add_xp(state, battle->xp);
         add_item(state, battle->loot_item);
+        printf("\n");
         return 0;
 }
 

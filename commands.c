@@ -46,7 +46,6 @@ uint8_t go_to(GameState *state, const char* where) {
 }
 
 uint8_t attack(GameState *state, const char* _) {
-        printf("CHAAARGE!\n");
         if (invalid_id(state->current_level, N_LEVELS)||cleared_level(state, state->current_level)) return 0;
         const Level *level = &levels[state->current_level - 1];
         add_cleared_level(state, state->current_level);
@@ -54,7 +53,11 @@ uint8_t attack(GameState *state, const char* _) {
 }
 
 uint8_t stats(GameState *state, const char* _) {
-        printf("%s:\e[1m\n- HP: (%d)/(%d)\n- ATK: %d\n- ARMOR: %d\e[0m\n", state->name, state->health, state->max_health, state->atk, state->atk);
+        print_room_info(state);
+        printf("\n");
+        list_items(state);
+        printf("\n");
+        printf("Stats of \e[4m%s\e[0m:\e[1m\n- HP: (%d)/(%d)\n- ATK: %d\n- ARMOR: %d\e[0m\n", state->name, state->health, state->max_health, state->atk, state->atk);
         return 0;
 }
 
@@ -64,11 +67,6 @@ uint8_t help(GameState *state, const char* _) {
         for (int i = 0; i<N_CMDS; i++) {
                 printf("-> %s - %s\n", commands[i].name, commands[i].desc);
         }
-        return 0;
-}
-
-uint8_t list_items_cmd(GameState *state, const char* _) {
-        list_items(state);
         return 0;
 }
 
@@ -88,7 +86,6 @@ Command commands[] = {
         {"HELP", "Print help", help},
         {"LOOT", "Search for items in the room", loot},
         {"GO TO", "Go to location", go_to},
-        {"ITEMS", "List items", list_items_cmd},
         {"USE", "Use item", use_item_cmd},
         {"QUIT", "Quit game", quit},
 };
@@ -97,6 +94,8 @@ const int N_CMDS = sizeof(commands) / sizeof(commands[0]);
 
 
 uint8_t run_command(GameState *state, const char* command) {
+        if (command[0] == 0) return 0;
+
         for (int i = 0; i<N_CMDS; i++) {
                 if (strncasecmp(commands[i].name, command, strlen(commands[i].name))==0) {
                         return commands[i].cmd(state, command + strlen(commands[i].name)+1);

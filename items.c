@@ -4,8 +4,20 @@
 #include "data.h"
 #include "util.h"
 
+uint8_t is_empty(GameState *state) {
+        for (int i = 0; i<INV_SIZE; i++) {
+                if (!invalid_id(state->items[i], N_ITEMS)) return 0;
+        }
+        return 1;
+}
 
 void list_items(GameState *state) {
+        
+        if (is_empty(state)) {
+                printf("You don't have any items.\n");
+                return;
+        }
+
         printf("Inventory:\n");
         for (int i = 0; i<INV_SIZE; i++) {
                 if (invalid_id(state->items[i], N_ITEMS)) {

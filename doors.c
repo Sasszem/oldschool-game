@@ -27,6 +27,25 @@ char* guard_name(uint8_t door_id) {
         return battles[door->battle_id - 1].enemy_name;
 }
 
+void print_level_doors(const GameState *state, const Level *level) {
+        for (int i = 0; i<DOORS_PER_LEVEL; i++) {
+                switch (guard_state(state, level->doors[i])) {
+                        case 1:
+                                // no guard
+                                printf("You can GO TO \e[4m%s\e[0m.\n", door_name(level->doors[i]));
+                                break;
+                        case 2:
+                                printf("You can GO TO \e[4m%s\e[0m, but it's GUARDED BY a \e[4m%s\e[0m.\n", door_name(level->doors[i]), guard_name(level->doors[i]));
+                                break;
+                        case 3:
+                                printf("You can GO TO \e[4m%s\e[0m, but it's GUARDED BY a SLEEPING \e[4m%s\e[0m.\n", door_name(level->doors[i]), guard_name(level->doors[i]));
+                                break;
+                        default:
+                                break;
+                }
+        }
+}
+
 uint8_t switch_level(GameState *state, uint8_t level_id) {
         if (invalid_id(level_id, N_LEVELS)) return 0;
 
@@ -35,34 +54,33 @@ uint8_t switch_level(GameState *state, uint8_t level_id) {
         // move player
         state->current_level = level_id;
 
-        printf("You entered the %s\n", level->name);
-        for (int i = 0; i<DOORS_PER_LEVEL; i++) {
-                switch (guard_state(state, level->doors[i])) {
-                        case 1:
-                                // no guard
-                                printf("You can GO TO %s.", door_name(level->doors[i]));
-                                break;
-                        case 2:
-                                printf("You can GO TO %s, but it's GUARDED BY a %s.", door_name(level->doors[i]), guard_name(level->doors[i]));
-                                break;
-                        case 3:
-                                printf("You can GO TO %s, but it's GUARDED BY a SLEEPING %s.", door_name(level->doors[i]), guard_name(level->doors[i]));
-                                break;
-                        default:
-                                break;
-                }
-        }
+        printf("You entered the \e[4m%s\e[0m\n", level->name);
+        print_level_doors(state, level);
 
         printf("\n");
-        if (!invalid_id(level->battle_id, N_BATTLES)) {
+        if (!invalid_id(level->battle_id, N_BATTLES) && !cleared_level(state, level_id)) {
                 if (battles[level->battle_id - 1].autostart) {
-                        printf("%s is SUPRISE ATTACKED by a %s!\n", state->name, battles[level->battle_id - 1].enemy_name);
+                        printf("%s is SUPRISE ATTACKED by a \e[4m%s\e[0m!\n", state->name, battles[level->battle_id - 1].enemy_name);
+                        add_cleared_level(state, level_id);
                         return process_battle(state, level->battle_id);
                 } else {
-                        printf("There is a SLEEPING %s!\n", battles[level->battle_id - 1].enemy_name);
+                        printf("There is a SLEEPING \e[4m%s\e[0m!\n", battles[level->battle_id - 1].enemy_name);
                 }
         }
         return 0;
+}
+
+void print_room_info(const GameState *state) {
+        if (invalid_id(state->current_level, N_LEVELS)) return;
+        const Level *level = &levels[state->current_level - 1];
+
+        printf("You are in the \e[4m%s\e[0m\n", level->name);
+
+        print_level_doors(state, level);
+
+        if (!invalid_id(level->battle_id, N_BATTLES)) {
+                printf("There is a SLEEPING \e[4m%s\e[0m!\n", battles[level->battle_id - 1].enemy_name);
+        }
 }
 
 uint8_t process_door(GameState *state, uint8_t door_id) {
