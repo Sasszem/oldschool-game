@@ -1,4 +1,6 @@
 #include <string.h>
+#include <strings.h>
+
 #include "data.h"
 #include "util.h"
 #include "progress.h"
@@ -34,7 +36,7 @@ uint8_t go_to(GameState *state, const char* where) {
         const Level *level = &levels[state->current_level - 1];
         for (int i = 0; i<DOORS_PER_LEVEL; i++) {
                 if (invalid_id(level->doors[i], N_DOORS)) continue;
-                if (strcmp(door_name(level->doors[i]), where) == 0) {
+                if (strcasecmp(door_name(level->doors[i]), where) == 0) {
                         // found it!
                         return process_door(state, level->doors[i]);
                 }
@@ -96,7 +98,7 @@ const int N_CMDS = sizeof(commands) / sizeof(commands[0]);
 
 uint8_t run_command(GameState *state, const char* command) {
         for (int i = 0; i<N_CMDS; i++) {
-                if (strncmp(commands[i].name, command, strlen(commands[i].name))==0) {
+                if (strncasecmp(commands[i].name, command, strlen(commands[i].name))==0) {
                         return commands[i].cmd(state, command + strlen(commands[i].name)+1);
                 }
         }

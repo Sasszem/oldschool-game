@@ -1,3 +1,4 @@
+#include <strings.h>
 #include "data.h"
 #include "util.h"
 #include "string.h"
@@ -42,7 +43,7 @@ void use_item(GameState *state, const char* item_name) {
         for (int i = 0; i<INV_SIZE; i++) {
                 if (invalid_id(state->items[i], N_ITEMS))
                         continue;
-                if (strcmp(items[state->items[i]-1].name, item_name)==0) {
+                if (strcasecmp(items[state->items[i]-1].name, item_name)==0) {
                         // found it
                         if (items[state->items[i]-1].callback) {
                                 printf("You used %s!\n", item_name);
