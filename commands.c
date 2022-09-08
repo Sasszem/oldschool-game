@@ -1,10 +1,10 @@
+#include <stdio.h>
 #include <string.h>
 #include <strings.h>
 
 #include "data.h"
 #include "util.h"
 #include "progress.h"
-#include <stdio.h>
 
 typedef uint8_t (*command_callback)(GameState*, const char*);
 

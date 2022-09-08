@@ -1,9 +1,9 @@
 #include <strings.h>
+#include <stdio.h>
+
 #include "data.h"
 #include "util.h"
-#include "string.h"
 
-#include <stdio.h>
 
 void list_items(GameState *state) {
         printf("Inventory:\n");
