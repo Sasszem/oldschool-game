@@ -67,7 +67,8 @@ GAction stats(GameState *state, const char* _) {
 GAction help(GameState *state, const char* _) {
         printf("Alaviable commands: \n");
         for (int i = 0; i<N_CMDS; i++) {
-                printf("-> %s - %s\n", commands[i].name, commands[i].desc);
+                if (!commands[i].hidden)
+                        printf("-> %s - %s\n", commands[i].name, commands[i].desc);
         }
         return GA_NOP;
 }
@@ -89,15 +90,28 @@ GAction load_game(GameState *state, const char* item) {
         return stats(state, NULL);
 }
 
+GAction get_flag(GameState *state, const char* item) {
+        const char* f = "       ";
+        const char* form = " |\e[%dm%s\e[49m\n";
+        printf("Here, enjoy your flag{\n");
+        printf(form, 41, f);
+        printf(form, 47, f);
+        printf(form, 42, f);
+        printf(" |\n |\n-+-\n}\n");
+        return GA_GAMEOVER;
+}
+
 Command commands[] = {
-        {"ATTACK", "Attack the enemy in the room", attack},
-        {"?", "Print stats", stats},
-        {"HELP", "Print help", help},
-        {"LOOT", "Search for items in the room", loot},
-        {"GO TO", "Go to location", go_to},
-        {"USE", "Use item", use_item_cmd},
-        {"QUIT", "Quit game (with saving)", quit},
-        {"LOAD", "Load game from state", load_game},
+        {"ATTACK", "Attack the enemy in the room", attack, 0},
+        {"?", "Print stats", stats, 0},
+        {"HELP", "Print help", help, 0},
+        {"LOOT", "Search for items in the room", loot, 0},
+        {"GO TO", "Go to location", go_to, 0},
+        {"USE", "Use item", use_item_cmd, 0},
+        {"QUIT", "Quit game (with saving)", quit, 0},
+        {"LOAD", "Load game from state", load_game, 0},
+        {"CD", "Cd into another directory", go_to, 1},
+        {"FLAG", "Get the flag and quit", get_flag, 1},
 };
 
 const int N_CMDS = sizeof(commands) / sizeof(commands[0]);
