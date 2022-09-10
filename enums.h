@@ -6,6 +6,6 @@ typedef enum {
 } GAction;
 
 typedef enum {
-    TRUE,
     FALSE,
+    TRUE,
 } BOOL;

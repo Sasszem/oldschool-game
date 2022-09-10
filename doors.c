@@ -69,7 +69,8 @@ GAction switch_level(GameState *state, uint8_t level_id, uint8_t skip_print) {
                 if (r != GA_NOP) return r;
         }
 
-        printf("\n");
+        if (!skip_print)
+                printf("\n");
         if (!invalid_id(level->battle_id, N_BATTLES) && !cleared_level(state, level_id)) {
                 if (battles[level->battle_id - 1].autostart) {
                         printf("%s is SUPRISE ATTACKED by a \e[4m%s\e[0m!\n", state->name, battles[level->battle_id - 1].enemy_name);
@@ -105,7 +106,7 @@ GAction process_door(GameState *state, uint8_t door_id) {
                 return GA_GAMEOVER;
         // defeated the guard, mark as defeated
         add_defeated_door(state, door_id);
-        if (has_item(state, door->lock_item_id)==TRUE) {
+        if (has_item(state, door->lock_item_id)==FALSE) {
                 printf("This door is LOCKED!\n");
                 return GA_NOP;
         }
