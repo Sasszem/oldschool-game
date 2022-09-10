@@ -56,9 +56,13 @@ GAction switch_level(GameState *state, uint8_t level_id, uint8_t skip_print) {
         // move player
         state->current_level = level_id;
 
-        printf("You entered the \e[4m%s\e[0m\n", level->name);
-        print_level_doors(state, level);
-
+        if (!skip_print) {
+                printf("You entered the \e[4m%s\e[0m\n", level->name);
+                print_level_doors(state, level);
+                
+                if (level->on_display)
+                        level->on_display(state);
+        }
 
         if (level->on_enter) {
                 GAction r = level->on_enter(state);
@@ -72,7 +76,8 @@ GAction switch_level(GameState *state, uint8_t level_id, uint8_t skip_print) {
                         add_cleared_level(state, level_id);
                         return process_battle(state, level->battle_id);
                 } else {
-                        printf("There is a SLEEPING \e[4m%s\e[0m!\n", battles[level->battle_id - 1].enemy_name);
+                        if (!skip_print)
+                                printf("There is a SLEEPING \e[4m%s\e[0m!\n", battles[level->battle_id - 1].enemy_name);
                 }
         }
         return GA_NOP;

@@ -87,6 +87,7 @@ GAction quit(GameState *state, const char* item) {
 
 GAction load_game(GameState *state, const char* item) {
         load_state(state, item);
+        switch_level(state, state->current_level, 0);
         return stats(state, NULL);
 }
 
