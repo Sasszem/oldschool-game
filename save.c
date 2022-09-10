@@ -49,20 +49,20 @@ uint8_t load_from_hex(void* target, const char* hex, size_t size) {
     uint8_t *data_ptr = (uint8_t*)target;
     for (size_t i = 0; i<size; i++)
         data_ptr[i] = hex_to_u8(&hex[i*2]);
-    return 0;
+    return 1;
 }
 
 void load_state(GameState *state, const char* save) {
     unsigned nonce;
     const char* save_ptr = save;
-    if (load_from_hex(&nonce, save_ptr, sizeof(nonce))) goto error;
+    if (!load_from_hex(&nonce, save_ptr, sizeof(nonce))) goto error;
     save_ptr += sizeof(nonce) * 2;
 
-    if (load_from_hex(state, save_ptr, sizeof(GameState))) goto error;
+    if (!load_from_hex(state, save_ptr, sizeof(GameState))) goto error;
     save_ptr += sizeof(GameState) * 2;
 
     uint16_t checksum_s;
-    if (load_from_hex(&checksum_s, save_ptr, sizeof(checksum_s))) goto error;
+    if (!load_from_hex(&checksum_s, save_ptr, sizeof(checksum_s))) goto error;
 
     srand(nonce);
     uint16_t checksum = nonce;
@@ -87,13 +87,13 @@ void load_state(GameState *state, const char* save) {
 
 GameState default_state = {
         {0}, // name
-        15, // HP
-        15, // maxHP
+        20, // HP
+        20, // maxHP
         0, // ARMOR
-        1, // ATK
+        3, // ATK
         0, // XP
         1, // LEVEL
-        {0},
+        {4},
         {0},
         {0},
         {0},
