@@ -1,12 +1,12 @@
 #include "data.h"
 #include "util.h"
+#include "story.h"
+
 #include <stdio.h>
 
 void set_health(GameState *state, uint8_t health) {
         state->health  = cap_max(health, state->max_health);
 }
-
-
 
 
 
@@ -19,6 +19,7 @@ void set_health(GameState *state, uint8_t health) {
 const Level levels[] = {
         {"First room", 2, {1}, {1,3}, NULL, NULL},
         {"Second room", 1, {2,3}, {}, NULL, NULL},
+        {"Boss room", 0, {}, {4}, on_boss_enter, on_boss_display},
 };
 const int N_LEVELS = (sizeof(levels)/sizeof(levels[0]));
 

@@ -6,6 +6,7 @@
 #include "doors.h"
 #include "battles.h"
 #include "progress.h"
+#include "story.h"
 #include "enums.h"
 
 

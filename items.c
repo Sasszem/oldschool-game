@@ -99,5 +99,6 @@ const Item items[] = {
         {"Key", 1, NULL, NULL},
         {"Potion", 1, use_potion,NULL},
         {"Copper Sword", 1, NULL, equip_copper_sword},
+        {"Alarm clock", 0, use_alarm, NULL},
 };
 const int N_ITEMS = (sizeof(items)/sizeof(items[0]));

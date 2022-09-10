@@ -47,5 +47,6 @@ GAction process_battle(GameState *state, uint8_t battle_id) {
 const Battle battles[] = {
         {"Guard", 20, 2, 1, 5, 2},
         {"Strong guard", 40, 5, 0, 10, 0},
+        {"Vampire", 40, 1, 0, 10, 0},
 };
 const int N_BATTLES = (sizeof(battles)/sizeof(battles[0]));
