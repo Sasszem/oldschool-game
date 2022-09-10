@@ -51,27 +51,29 @@ BOOL has_item(GameState *state, uint8_t item) {
         return FALSE;
 }
 
-void use_item(GameState *state, const char* item_name) {
+GAction use_item(GameState *state, const char* item_name) {
         for (int i = 0; i<INV_SIZE; i++) {
                 if (invalid_id(state->items[i], N_ITEMS))
                         continue;
                 if (strcasecmp(items[state->items[i]-1].name, item_name)==0) {
                         // found it
+                        uint8_t result = 0;
                         if (items[state->items[i]-1].callback) {
                                 printf("You used %s!\n", item_name);
-                                items[state->items[i]-1].callback(state);
+                                result = items[state->items[i]-1].callback(state);
                         } else {
                                 printf("You can't use that!\n");
-                                return;
+                                return GA_NOP;
                         }
                         if (items[state->items[i]-1].signle_use) {
                                 state->items[i] = 0;
                         }
-                        return;
+                        return result;
                 }
         }
         // not found
         printf("You don't have any of that in your bag!\n");
+        return GA_NOP;
 }
 
 
