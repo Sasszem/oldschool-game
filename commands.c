@@ -102,6 +102,25 @@ GAction get_flag(GameState *state, const char* item) {
         return GA_GAMEOVER;
 }
 
+GAction debug_dump(GameState*state, const char* item) {
+        printf("Debug dump: \n");
+        printf("- Level = %d\n", state->current_level);
+        printf("- XP = %d\n",state->xp);
+        printf("- looted_levels: \n");
+        for (int i = 0; i<STORE; i++) {
+                if (state->looted_levels[i]) printf("--- %d\n", state->looted_levels[i]);
+        }
+        printf("- cleared_rooms: \n");
+        for (int i = 0; i<STORE; i++) {
+                if (state->cleared_levels[i]) printf("--- %d\n", state->cleared_levels[i]);
+        }
+        printf("- cleared_rooms: \n");
+        for (int i = 0; i<STORE; i++) {
+                if (state->opened_doors[i]) printf("--- %d\n", state->opened_doors[i]);
+        }
+        return GA_NOP;
+}
+
 Command commands[] = {
         {"ATTACK", "Attack the enemy in the room", attack, 0},
         {"?", "Print stats", stats, 0},
@@ -113,6 +132,7 @@ Command commands[] = {
         {"LOAD", "Load game from state", load_game, 0},
         {"CD", "Cd into another directory", go_to, 1},
         {"FLAG", "Get the flag and quit", get_flag, 1},
+        {"DD", "Debug dump", debug_dump, 1}, // TODO: comment this line to disable feature
 };
 
 const int N_CMDS = sizeof(commands) / sizeof(commands[0]);
