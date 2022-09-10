@@ -2,14 +2,16 @@
 #include "data.h"
 #include "util.h"
 
-uint8_t guard_state(const GameState *state, uint8_t door_id) {
-        if (invalid_id(door_id, N_DOORS)) return 0;
+
+
+GuardState guard_state(const GameState *state, uint8_t door_id) {
+        if (invalid_id(door_id, N_DOORS)) return INVALID_DOOR;
 
         const Door *door = &doors[door_id - 1];
-        if (invalid_id(door->battle_id, N_BATTLES) || defeated_door(state, door_id)) return 1;
+        if (invalid_id(door->battle_id, N_BATTLES) || defeated_door(state, door_id)) return NO_GUARD;
 
         const Battle *battle = &battles[door->battle_id - 1];
-        return battle->autostart ? 2 : 3;
+        return battle->autostart ? GUARD : SLEEPING_GUARD;
 }
 
 char* door_name(uint8_t door_id) {
@@ -30,14 +32,14 @@ char* guard_name(uint8_t door_id) {
 void print_level_doors(const GameState *state, const Level *level) {
         for (int i = 0; i<DOORS_PER_LEVEL; i++) {
                 switch (guard_state(state, level->doors[i])) {
-                        case 1:
+                        case NO_GUARD:
                                 // no guard
                                 printf("You can GO TO \e[4m%s\e[0m.\n", door_name(level->doors[i]));
                                 break;
-                        case 2:
+                        case GUARD:
                                 printf("You can GO TO \e[4m%s\e[0m, but it's GUARDED BY a \e[4m%s\e[0m.\n", door_name(level->doors[i]), guard_name(level->doors[i]));
                                 break;
-                        case 3:
+                        case SLEEPING_GUARD:
                                 printf("You can GO TO \e[4m%s\e[0m, but it's GUARDED BY a SLEEPING \e[4m%s\e[0m.\n", door_name(level->doors[i]), guard_name(level->doors[i]));
                                 break;
                         default:
@@ -83,19 +85,20 @@ void print_room_info(const GameState *state) {
         }
 }
 
-uint8_t process_door(GameState *state, uint8_t door_id) {
-        if (invalid_id(door_id, N_DOORS)) return 1;
+GAction process_door(GameState *state, uint8_t door_id) {
+        if (invalid_id(door_id, N_DOORS)) return GA_NOP;
         const Door *door = &doors[door_id - 1];
         if (door->battle_id && (!defeated_door(state, door_id)) && process_battle(state, door->battle_id))
-                return 1;        
+                return GA_GAMEOVER;
         // defeated the guard, mark as defeated
         add_defeated_door(state, door_id);
-        if (!has_item(state, door->lock_item_id)) {
+        if (has_item(state, door->lock_item_id)==TRUE) {
                 printf("This door is LOCKED!\n");
+                return GA_NOP;
         }
 
         // we can go trough
-        return switch_level(state, door->target_room_id);
+        return switch_level(state, door->target_room_id, 0);
 }
 
 /*********

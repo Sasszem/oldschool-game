@@ -1,5 +1,6 @@
 #pragma once
 #include "gamestate.h"
+#include "enums.h"
 /***********
  * BATTLES *
  ***********/
@@ -17,4 +18,4 @@ extern const Battle battles[];
 extern const int N_BATTLES;
 
 
-uint8_t process_battle(GameState *state, uint8_t battle_id);
+GAction process_battle(GameState *state, uint8_t battle_id);

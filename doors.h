@@ -9,14 +9,19 @@ typedef struct door {
 extern const Door doors[];
 extern const int N_DOORS;
 
-
-uint8_t guard_state(const GameState *state, uint8_t door_id);
+typedef enum {
+        INVALID_DOOR,
+        NO_GUARD,
+        GUARD,
+        SLEEPING_GUARD,
+} GuardState;
+GuardState guard_state(const GameState *state, uint8_t door_id);
 
 char* door_name(uint8_t door_id);
 
 char* guard_name(uint8_t door_id);
 
-uint8_t switch_level(GameState *state, uint8_t level_id);
+GAction switch_level(GameState *state, uint8_t level_id, uint8_t skip_print);
 
-uint8_t process_door(GameState *state, uint8_t door_id);
+GAction process_door(GameState *state, uint8_t door_id);
 void print_room_info(const GameState *state);

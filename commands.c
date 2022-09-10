@@ -7,19 +7,20 @@
 #include "progress.h"
 #include "save.h"
 
-typedef uint8_t (*command_callback)(GameState*, const char*);
+typedef GAction (*command_callback)(GameState*, const char*);
 
 typedef struct cmd {
         const char *name;
         const char *desc;
         command_callback cmd;
+        uint8_t hidden;
 } Command;
 Command commands[];
 const int N_CMDS;
 
-uint8_t loot(GameState *state, const char* _) {
-        if (looted_level(state, state->current_level)) return 0;
-        if (invalid_id(state->current_level, N_LEVELS)) return 0;
+GAction loot(GameState *state, const char* _) {
+        if (looted_level(state, state->current_level)) return GA_NOP;
+        if (invalid_id(state->current_level, N_LEVELS)) return GA_NOP;
 
         const Level *level = &levels[state->current_level - 1];
         for (int i = 0; i<ITEMS_PER_LEVEL; i++) {
@@ -27,11 +28,11 @@ uint8_t loot(GameState *state, const char* _) {
                 add_item(state, level->items[i]);
         }
         add_looted_level(state, state->current_level);
-        return 0;
+        return GA_NOP;
 }
 
-uint8_t go_to(GameState *state, const char* where) {
-        if (invalid_id(state->current_level, N_LEVELS)) return 0;
+GAction go_to(GameState *state, const char* where) {
+        if (invalid_id(state->current_level, N_LEVELS)) return GA_NOP;
 
 
         const Level *level = &levels[state->current_level - 1];
@@ -43,48 +44,47 @@ uint8_t go_to(GameState *state, const char* where) {
                 }
         }
         printf("Can't go to '%s'!\n", where);
-        return 0;
+        return GA_NOP;
 }
 
-uint8_t attack(GameState *state, const char* _) {
-        if (invalid_id(state->current_level, N_LEVELS)||cleared_level(state, state->current_level)) return 0;
+GAction attack(GameState *state, const char* _) {
+        if (invalid_id(state->current_level, N_LEVELS)||cleared_level(state, state->current_level)) return GA_NOP;
         const Level *level = &levels[state->current_level - 1];
         add_cleared_level(state, state->current_level);
         return process_battle(state, level->battle_id);
 }
 
-uint8_t stats(GameState *state, const char* _) {
+GAction stats(GameState *state, const char* _) {
         print_room_info(state);
         printf("\n");
         list_items(state);
         printf("\n");
         printf("Stats of \e[4m%s\e[0m:\e[1m\n- HP: (%d)/(%d)\n- ATK: %d\n- ARMOR: %d\e[0m\n", state->name, state->health, state->max_health, state->atk, state->atk);
-        return 0;
+        return GA_NOP;
 }
 
 
-uint8_t help(GameState *state, const char* _) {
+GAction help(GameState *state, const char* _) {
         printf("Alaviable commands: \n");
         for (int i = 0; i<N_CMDS; i++) {
                 printf("-> %s - %s\n", commands[i].name, commands[i].desc);
         }
-        return 0;
+        return GA_NOP;
 }
 
-uint8_t use_item_cmd(GameState *state, const char* item) {
-        use_item(state, item);
-        return 0;
+GAction use_item_cmd(GameState *state, const char* item) {
+        return use_item(state, item);
 }
 
-uint8_t quit(GameState *state, const char* item) {
+GAction quit(GameState *state, const char* item) {
         printf("Your savestate: \e[4m");
         save_state(state);
         printf("\e[0m\n");
         printf("\e[7mThank you for playing\e[0m\n");
-        return 1;
+        return GA_GAMEOVER;
 }
 
-uint8_t load_game(GameState *state, const char* item) {
+GAction load_game(GameState *state, const char* item) {
         load_state(state, item);
         return stats(state, NULL);
 }
@@ -103,8 +103,8 @@ Command commands[] = {
 const int N_CMDS = sizeof(commands) / sizeof(commands[0]);
 
 
-uint8_t run_command(GameState *state, const char* command) {
-        if (command[0] == 0) return 0;
+GAction run_command(GameState *state, const char* command) {
+        if (command[0] == 0) return GA_NOP;
 
         for (int i = 0; i<N_CMDS; i++) {
                 if (strncasecmp(commands[i].name, command, strlen(commands[i].name))==0) {
@@ -112,5 +112,5 @@ uint8_t run_command(GameState *state, const char* command) {
                 }
         }
         printf("Invalid command: '%s'\n", command);
-        return 0;
+        return GA_NOP;
 }

@@ -2,14 +2,14 @@
 #include "data.h"
 #include "util.h"
 
-uint8_t defeated_door(const GameState *state, uint8_t door) {
-        if (invalid_id(door, N_DOORS)) return 1;
+BOOL defeated_door(const GameState *state, uint8_t door) {
+        if (invalid_id(door, N_DOORS)) return TRUE;
         for (int i = 0; i<STORE; i++) {
                 if (state->opened_doors[i]==door) {
-                        return 1;
+                        return TRUE;
                 }
         }
-        return 0;
+        return FALSE;
 }
 
 void add_defeated_door(GameState *state, uint8_t door) {
@@ -21,14 +21,14 @@ void add_defeated_door(GameState *state, uint8_t door) {
         }
 }
 
-uint8_t looted_level(const GameState *state, uint8_t level) {
-        if (invalid_id(level, N_LEVELS)) return 1;
+BOOL looted_level(const GameState *state, uint8_t level) {
+        if (invalid_id(level, N_LEVELS)) return TRUE;
         for (int i = 0; i<STORE; i++) {
                 if (state->looted_levels[i]==level) {
-                        return 1;
+                        return TRUE;
                 }
         }
-        return 0;
+        return FALSE;
 }
 
 void add_looted_level(GameState *state, uint8_t level) {
@@ -41,14 +41,14 @@ void add_looted_level(GameState *state, uint8_t level) {
 }
 
 
-uint8_t cleared_level(const GameState *state, uint8_t level) {
-        if (invalid_id(level, N_LEVELS)) return 1;
+BOOL cleared_level(const GameState *state, uint8_t level) {
+        if (invalid_id(level, N_LEVELS)) return TRUE;
         for (int i = 0; i<STORE; i++) {
                 if (state->cleared_levels[i]==level) {
-                        return 1;
+                        return TRUE;
                 }
         }
-        return 0;
+        return FALSE;
 }
 
 void add_cleared_level(GameState *state, uint8_t level) {

@@ -3,8 +3,8 @@
 #include <stdio.h>
 #include <unistd.h>
 
-uint8_t process_battle(GameState *state, uint8_t battle_id) {
-        if (invalid_id(battle_id, N_BATTLES)) return 0;
+GAction process_battle(GameState *state, uint8_t battle_id) {
+        if (invalid_id(battle_id, N_BATTLES)) return GA_NOP;
         const Battle *battle = &battles[battle_id-1];
 
         if (battle->autostart) {
@@ -30,13 +30,13 @@ uint8_t process_battle(GameState *state, uint8_t battle_id) {
         }
         if (state->health == 0) {
                 printf("%s lost the battle!\n\e[5mGAME OVER\e[0m\n", state->name);
-                return 1;
+                return GA_GAMEOVER;
         }
         printf("%s defeated %s\n", state->name, battle->enemy_name);
         add_xp(state, battle->xp);
         add_item(state, battle->loot_item);
         printf("\n");
-        return 0;
+        return GA_NOP;
 }
 
 

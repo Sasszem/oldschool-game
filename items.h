@@ -4,8 +4,9 @@
 #pragma once
 
 #include "gamestate.h"
+#include "enums.h"
 
-typedef uint8_t (*item_callback)(GameState*);
+typedef GAction (*item_callback)(GameState*);
 
 typedef struct item
 {
@@ -21,5 +22,5 @@ extern const int N_ITEMS;
 
 void list_items(GameState *state);
 void add_item(GameState *state, uint8_t item_to_add);
-uint8_t has_item(GameState *state, uint8_t item);
-void use_item(GameState *state, const char* item_name);
+BOOL has_item(GameState *state, uint8_t item);
+GAction use_item(GameState *state, const char* item_name);
