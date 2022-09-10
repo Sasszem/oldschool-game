@@ -48,8 +48,8 @@ void print_level_doors(const GameState *state, const Level *level) {
         }
 }
 
-uint8_t switch_level(GameState *state, uint8_t level_id) {
-        if (invalid_id(level_id, N_LEVELS)) return 0;
+GAction switch_level(GameState *state, uint8_t level_id, uint8_t skip_print) {
+        if (invalid_id(level_id, N_LEVELS)) return GA_NOP;
 
         const Level *level = &levels[level_id - 1];
 
@@ -58,6 +58,12 @@ uint8_t switch_level(GameState *state, uint8_t level_id) {
 
         printf("You entered the \e[4m%s\e[0m\n", level->name);
         print_level_doors(state, level);
+
+
+        if (level->on_enter) {
+                GAction r = level->on_enter(state);
+                if (r != GA_NOP) return r;
+        }
 
         printf("\n");
         if (!invalid_id(level->battle_id, N_BATTLES) && !cleared_level(state, level_id)) {
@@ -69,7 +75,7 @@ uint8_t switch_level(GameState *state, uint8_t level_id) {
                         printf("There is a SLEEPING \e[4m%s\e[0m!\n", battles[level->battle_id - 1].enemy_name);
                 }
         }
-        return 0;
+        return GA_NOP;
 }
 
 void print_room_info(const GameState *state) {
@@ -79,6 +85,8 @@ void print_room_info(const GameState *state) {
         printf("You are in the \e[4m%s\e[0m\n", level->name);
 
         print_level_doors(state, level);
+        if (level->on_display)
+                level->on_display(state);
 
         if (!invalid_id(level->battle_id, N_BATTLES)) {
                 printf("There is a SLEEPING \e[4m%s\e[0m!\n", battles[level->battle_id - 1].enemy_name);
