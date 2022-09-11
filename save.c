@@ -1,4 +1,5 @@
 #include "save.h"
+#include "enums.h"
 
 #include <memory.h>
 #include <stdlib.h>
@@ -52,7 +53,7 @@ uint8_t load_from_hex(void* target, const char* hex, size_t size) {
     return 1;
 }
 
-void load_state(GameState *state, const char* save) {
+BOOL load_state(GameState *state, const char* save) {
     unsigned nonce;
     const char* save_ptr = save;
     if (!load_from_hex(&nonce, save_ptr, sizeof(nonce))) goto error;
@@ -74,15 +75,16 @@ void load_state(GameState *state, const char* save) {
 
     if (checksum != checksum_s) {
         printf("Load failed: invalid checksum!\n");
-        reset_state(state);        
+        reset_state(state);
+        return FALSE;
     } else {
         printf("Load complete!\n");
     }
-    return;
+    return TRUE;
 
     error:
     printf("Load failed: invalid length!");
-    return;
+    return FALSE;
 }
 
 GameState default_state = {
@@ -90,10 +92,10 @@ GameState default_state = {
         20, // HP
         20, // maxHP
         0, // ARMOR
-        3, // ATK
+        2, // ATK
         0, // XP
         1, // LEVEL
-        {4},
+        {0},
         {0},
         {0},
         {0},
