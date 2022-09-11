@@ -45,7 +45,7 @@ char getch(void)
 
 
 void clrscr() {
-    printf("\e[0;0H\e[2J");
+    printf("\e[0;0H\e[2J\e[0m");
 }
 
 void hide_cursor() {

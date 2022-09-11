@@ -91,10 +91,16 @@ GAction use_item_cmd(GameState *state, const char* item) {
 }
 
 GAction quit(GameState *state, const char* item) {
+        clrscr();
+        printf("\e[7mThank you for playing\e[0m\n\n");
         printf("Your savestate: \e[4m");
         save_state(state);
         printf("\e[0m\n");
-        printf("\e[7mThank you for playing\e[0m\n");
+        printf("\nCopy & save this!\n");
+        printf("\n\e[7mPRESS ANY KEY TO QUIT TO THE MENU!\e[27m\n");
+        hide_cursor();
+        getch();
+        show_cursor();
         return GA_GAMEOVER;
 }
 
@@ -105,6 +111,7 @@ GAction load_game(GameState *state, const char* item) {
 }
 
 GAction get_flag(GameState *state, const char* item) {
+        clrscr();
         const char* f = "       ";
         const char* form = " |\e[%dm%s\e[49m\n";
         printf("Here, enjoy your flag{\n");
@@ -112,6 +119,9 @@ GAction get_flag(GameState *state, const char* item) {
         printf(form, 47, f);
         printf(form, 42, f);
         printf(" |\n |\n-+-\n}\n");
+        hide_cursor();
+        printf("\n\n\e[7mPRESS ANY KEY TO QUIT TO THE MENU!\e[27m");
+        getch();
         return GA_GAMEOVER;
 }
 
