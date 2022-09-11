@@ -17,6 +17,7 @@ void add_defeated_door(GameState *state, uint8_t door) {
         for (int i = 0; i<STORE; i++) {
                 if (state->opened_doors[i]==0 || state->opened_doors[i] > N_DOORS) {
                         state->opened_doors[i] = door;
+                        return;
                 }
         }
 }
@@ -36,6 +37,7 @@ void add_looted_level(GameState *state, uint8_t level) {
         for (int i = 0; i<STORE; i++) {
                 if (invalid_id(state->looted_levels[i], N_LEVELS)) {
                         state->looted_levels[i] = level;
+                        return;
                 }
         }
 }
@@ -56,6 +58,7 @@ void add_cleared_level(GameState *state, uint8_t level) {
         for (int i = 0; i<STORE; i++) {
                 if (invalid_id(state->cleared_levels[i], N_LEVELS)) {
                         state->cleared_levels[i] = level;
+                        return;
                 }
         }
 }
