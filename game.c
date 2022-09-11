@@ -126,6 +126,9 @@ void play(GameState *state) {
                         free(line);
                 }
         }
+        hide_cursor();
+        getch();
+        show_cursor();
 }
 
 
@@ -198,7 +201,7 @@ int main(int argc, char** argv) {
         signal(SIGTERM, restore_term);
         signal(SIGINT, restore_term);
         signal(SIGTSTP, restore_term);
-
+        signal(SIGSEGV, restore_term);
         
         while (1) {
                 print_menu();
