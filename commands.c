@@ -144,6 +144,17 @@ GAction debug_dump(GameState*state, const char* item) {
         return GA_NOP;
 }
 
+GAction cheat_code(GameState *state, const char* _) {
+        if (strcmp(state->name, "Doomguy")) {
+                return GA_GAMEOVER;
+        }
+        state->health = state->max_health = 100;
+        state->armor = 100;
+        state->atk = 100;
+        return stats(state, NULL);
+}
+
+
 Command commands[] = {
         {"ATTACK", "Attack the enemy in the room", attack, 0},
         {"?", "Print stats", stats, 0},
@@ -156,7 +167,8 @@ Command commands[] = {
         {"LOAD", "Load game from state", load_game, 0},
         {"CD", "Cd into another directory", go_to, 1},
         {"FLAG", "Get the flag and quit", get_flag, 1},
-        {"DD", "Debug dump", debug_dump, 1}, // TODO: comment this line to disable feature
+        //{"DD", "Debug dump", debug_dump, 1}, // TODO: comment this line to disable feature
+        {"IDDQD", "IDDQD", cheat_code, 1}, // TODO: comment this line to disable feature
 };
 
 const int N_CMDS = sizeof(commands) / sizeof(commands[0]);
