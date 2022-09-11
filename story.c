@@ -23,9 +23,26 @@ BOOL all_guards_dead(const GameState *state) {
                         return FALSE;
                 }
         }
-
-        //TODO: all rooms are cleared too!
+        for (int i = 0; i<N_LEVELS; i++) {
+                if (!cleared_level(state, i)) {
+                        return FALSE;
+                }
+        }
         return TRUE;
+}
+
+void print_flag() {
+        FILE *fptr;
+        // Open file
+        int c;
+        fptr = fopen("flag", "r");
+        printf("\e[30m");
+        // Read contents from file
+        while ((c = fgetc(fptr)) != EOF)
+                putc(c, stdout);
+        printf("\e[39m");
+        fflush(stdout);
+        fclose(fptr);
 }
 
 GAction use_alarm(GameState*state) {
@@ -44,29 +61,60 @@ GAction use_alarm(GameState*state) {
                         break;
                 case 5:
                         printf("[Vampire] Enough is enought! You woke me up! I could not get even 50 years of sleep, because of you!\n");
+                        usleep(500000);
                         printf("[Vampire] Now I am real pissed!\n");
+                        usleep(500000);
                         printf("[Vampire] MINIONS! Attack!\n");
-                        return (process_battle(state, 1) || process_battle(state, 1) || process_battle(state, 2));
+                        usleep(3000000);
+                        return (process_battle(state, 4) || (sleep(2), process_battle(state, 2)) || (sleep(2), process_battle(state, 5)) || (sleep(2), process_battle(state, 8)));
                         break;
                 case 6:
                         printf("[Vampire] zZz\n");
                         break;
                 case 7:
                         printf("[Vampire] WHAT? You are still here?\n");
+                        usleep(500000);
                         printf("[Vampire] You got my guards?!\n");
+                        usleep(500000);
                         printf("[Vampire] Do I have to deal with you myself?!\n");
-                        printf("[Vampire] Ka-ME-Ha-Me....");
+                        usleep(500000);
+                        printf("[Vampire] Ka-");
                         fflush(stdout);
-                        sleep(1);
-                        printf("HA!");
+                        usleep(500000);
+                        printf("me-");
+                        fflush(stdout);
+                        usleep(500000);
+                        printf("ha-");
+                        fflush(stdout);
+                        usleep(500000);
+                        fflush(stdout);
+                        printf("me-");
+                        fflush(stdout);
+                        usleep(1500000);
+                        printf("HA!\n");
                         if (!all_guards_dead(state)) {
                                 printf("%s lost the battle!\n\e[5mGAME OVER\e[0m\n", state->name);
                                 return GA_GAMEOVER;
                         }
+                        usleep(3000000);
+                        printf("[%s] Is something supposed to happen?\n", state->name);
+                        usleep(500000);
                         printf("[Vampire] WHAT?!\n");
+                        usleep(500000);
                         printf("[Vampire] Why is it not working? Do I have no minions left?!\n");
+                        usleep(500000);
                         printf("[Vampire] You did a fine job. But I am still way stronger than you are!\n");
-                        return process_battle(state, 3);
+                        usleep(3000000);
+                        if (process_battle(state, 7))
+                                return GA_GAMEOVER;
+                        printf("[Vampire] NOOOOOOOOOOO!\n");
+                        usleep(500000);
+                        printf("[Vampire] How could you win when I was cheating?!\n");
+                        usleep(500000);
+                        printf("\e[5mVICTORY!\e[0m\n");
+                        printf("Insert another coin!\n");
+                        print_flag();
+                        return GA_GAMEOVER;
         }
         return GA_NOP;
 }

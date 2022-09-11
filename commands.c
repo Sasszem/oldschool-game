@@ -157,14 +157,17 @@ GAction cheat_code(GameState *state, const char* _) {
 
 Command commands[] = {
         {"ATTACK", "Attack the enemy in the room", attack, 0},
+        {"A", "Attack the enemy in the room", attack, 1},
         {"?", "Print stats", stats, 0},
         {"HELP", "Print help", help, 0},
+        {"H", "Print help", help, 1},
         {"LOOT", "Search for items in the room", loot, 0},
+        {"L", "Search for items in the room", loot, 1},
         {"GO TO", "Go to location", go_to, 0},
         {"USE", "Use item", use_item_cmd, 0},
+        {"U", "Use item", use_item_cmd, 1},
         {"QUIT", "Quit game (with saving)", quit, 0},
         {"Q", "Quit game (with saving)", quit, 1},
-        {"LOAD", "Load game from state", load_game, 0},
         {"CD", "Cd into another directory", go_to, 1},
         {"FLAG", "Get the flag and quit", get_flag, 1},
         //{"DD", "Debug dump", debug_dump, 1}, // TODO: comment this line to disable feature
@@ -178,7 +181,7 @@ GAction run_command(GameState *state, const char* command) {
         if (command[0] == 0) return GA_NOP;
 
         for (int i = 0; i<N_CMDS; i++) {
-                if (strncasecmp(commands[i].name, command, strlen(commands[i].name))==0) {
+                if (strncasecmp(commands[i].name, command, strlen(commands[i].name))==0 && (command[strlen(commands[i].name)] == ' ' || command[strlen(commands[i].name)] == '\0')) {
                         return commands[i].cmd(state, command + strlen(commands[i].name)+1);
                 }
         }

@@ -89,16 +89,49 @@ GAction use_potion(GameState *state) {
         return GA_NOP;
 }
 
+GAction use_big_potion(GameState *state) {
+        uint8_t old_health = state->health;
+        set_health(state, state->health + (uint8_t)15);
+        uint8_t healed = state->health - old_health;
+        printf("Healed \e[4m%d points! (%d/%d)\e[0m\n", healed, state->health, state->max_health);
+        return GA_NOP;
+}
+
 GAction equip_copper_sword(GameState *state) {
         state->atk += 3;
         printf("Equiped \e[4mcopper\e[0m sword! ATK+3\n");
         return GA_NOP;
 }
 
+GAction equip_enchanted_sword(GameState *state) {
+        state->atk += 10;
+        printf("Equiped \e[4menchanted\e[0m sword! ATK+10\n");
+        return GA_NOP;
+}
+
+GAction dusty_scroll_read(GameState *state) {
+        printf("You can barely make out the writing on the old scroll, but it says something about the vampire hiding in a secret room, despite having the power to instantly kill anybody as long as any of his minions are alive.\n");
+        return GA_NOP;
+}
+
+GAction old_scroll_read(GameState *state) {
+        printf("The old scroll says that this tomb is cursed, and no adventurer can make out alive without divine help.\n");
+        return GA_NOP;
+}
+
+
 const Item items[] = {
-        {"Key", 1, NULL, NULL},
+        {"Tomb key", 1, NULL, NULL},
+        {"Dusty scroll", 0, dusty_scroll_read, NULL},
+        {"Broom", 1, NULL, NULL},
         {"Potion", 1, use_potion,NULL},
+        {"Storage room key", 1, NULL, NULL},
         {"Copper Sword", 1, NULL, equip_copper_sword},
+        {"Enchanted sword", 1, NULL, equip_enchanted_sword},
+        {"Big potion", 1, use_big_potion, NULL},
+        {"??? Key", 1, NULL, NULL},
+        {"Old scroll", 0, old_scroll_read, NULL},
+        {"Portal Gun", 0, NULL, NULL},
         {"Alarm clock", 0, use_alarm, NULL},
 };
 const int N_ITEMS = (sizeof(items)/sizeof(items[0]));

@@ -44,9 +44,16 @@ GAction process_battle(GameState *state, uint8_t battle_id) {
  * BATTLES *
  ***********/
 
+// name health atk auto xp item
+
 const Battle battles[] = {
-        {"Guard", 20, 2, 1, 5, 2},
-        {"Strong guard", 40, 5, 0, 10, 0},
-        {"Vampire", 40, 1, 0, 10, 0},
+        {"Tomb guard", 15, 2, 0, 3, 1},
+        {"Zombie", 30, 4, 0, 8, 0},
+        {"Skeleton warrior", 60, 4, 0, 20, 7},
+        {"Tomb guard", 15, 2, 0, 3, 0},
+        {"Skeleton warrior", 60, 4, 0, 20, 0},
+        {"Robot", 0, 100, 1, 0, 11},
+        {"Vampire", 120, 120, 1, 0, 0},
+        {"Renfield", 100, 1, 1, 1, 0},
 };
 const int N_BATTLES = (sizeof(battles)/sizeof(battles[0]));

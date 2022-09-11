@@ -94,7 +94,7 @@ void print_room_info(const GameState *state) {
         if (level->on_display)
                 level->on_display(state);
 
-        if (!invalid_id(level->battle_id, N_BATTLES)) {
+        if (!invalid_id(level->battle_id, N_BATTLES) && !cleared_level(state, state->current_level)) {
                 printf("There is a SLEEPING \e[4m%s\e[0m!\n", battles[level->battle_id - 1].enemy_name);
         }
 }
@@ -114,16 +114,3 @@ GAction process_door(GameState *state, uint8_t door_id) {
         // we can go trough
         return switch_level(state, door->target_room_id, 0);
 }
-
-/*********
- * DOORS *
- *********/
-
-
-const Door doors[] = {
-        {2, 1, 1},
-        {1, 0, 0},
-        {3, 0, 0},
-};
-
-const int N_DOORS = (sizeof(doors)/sizeof(doors[0]));
