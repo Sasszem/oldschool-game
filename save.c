@@ -23,6 +23,7 @@ void save_state(GameState *state) {
     srand(nonce);
     for (int i = 0; i<sizeof(GameState); i++) {
         checksum += data[i];
+        // checksum <<= 1; ? idk ifits better ornot
         printf("%02x", data[i] ^ (uint8_t)rand());
     }
     print_as_hex(&checksum, sizeof(checksum));
