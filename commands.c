@@ -19,15 +19,22 @@ Command commands[];
 const int N_CMDS;
 
 GAction loot(GameState *state, const char* _) {
-        if (looted_level(state, state->current_level)) return GA_NOP;
+        if (looted_level(state, state->current_level)) goto not_found;
         if (invalid_id(state->current_level, N_LEVELS)) return GA_NOP;
 
         const Level *level = &levels[state->current_level - 1];
+        BOOL found = FALSE;
         for (int i = 0; i<ITEMS_PER_LEVEL; i++) {
                 if (invalid_id(level->items[i], N_ITEMS)) continue;
                 add_item(state, level->items[i]);
+                found = TRUE;
         }
         add_looted_level(state, state->current_level);
+        if (!found)
+                goto not_found;
+        return GA_NOP;
+        not_found:
+        printf("You did not find anything!\n");
         return GA_NOP;
 }
 
@@ -48,10 +55,16 @@ GAction go_to(GameState *state, const char* where) {
 }
 
 GAction attack(GameState *state, const char* _) {
-        if (invalid_id(state->current_level, N_LEVELS)||cleared_level(state, state->current_level)) return GA_NOP;
+        if (invalid_id(state->current_level, N_LEVELS)) return GA_NOP;
+        if (cleared_level(state, state->current_level)) goto no_enemy;
         const Level *level = &levels[state->current_level - 1];
         add_cleared_level(state, state->current_level);
+        if (invalid_id(level->battle_id, N_BATTLES)) goto no_enemy;
         return process_battle(state, level->battle_id);
+
+        no_enemy:
+                printf("No enemy to attack!\n");
+                return GA_NOP;
 }
 
 GAction stats(GameState *state, const char* _) {
@@ -129,6 +142,7 @@ Command commands[] = {
         {"GO TO", "Go to location", go_to, 0},
         {"USE", "Use item", use_item_cmd, 0},
         {"QUIT", "Quit game (with saving)", quit, 0},
+        {"Q", "Quit game (with saving)", quit, 1},
         {"LOAD", "Load game from state", load_game, 0},
         {"CD", "Cd into another directory", go_to, 1},
         {"FLAG", "Get the flag and quit", get_flag, 1},
