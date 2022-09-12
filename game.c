@@ -196,6 +196,9 @@ void restore_term() {
 
 GameState state = {{"Jauzsi!"}, 20, 20, 0, 6, 0, 0, {0}, {0}, {0},{0}};
 int main(int argc, char** argv) {
+        setvbuf(stdin, NULL, _IONBF, 0);
+        setvbuf(stdout, NULL, _IONBF, 0);
+        setvbuf(stderr, NULL, _IONBF, 0);
         printf("\e[?1049h");
         atexit(restore_term);
         signal(SIGTERM, restore_term);
