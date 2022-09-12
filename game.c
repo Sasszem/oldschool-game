@@ -28,7 +28,7 @@ char* help_text =
         "- Quit (Q) - this option quits the game\n"
         "\nYou can always return to the menu from the game via the command 'QUIT'.\n\n"
         "\e[7mGAMEPLAY\e[27m\n"
-        "You control your hero by giving them commands. For a list of commands, you can use the in-game command 'HELP'.\n"
+        "You control your hero by giving them commands. For a list of commands, you can use the in-game command 'HELP'. You can often use the first letter of a command as a shortcut.\n"
         "Commands: \n"
         "- HELP - prints help for commands\n"
         "- ATTACK - attack sleeping enemy in the area\n"
