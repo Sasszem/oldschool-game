@@ -1,0 +1,7 @@
+- check network buffering - need to send characters without enter
+- hint: gamestate.h
+- check spelling?
+- "make editor" builds editor
+- check heap? Not a pwn!
+- replace fake flag
+- remove unused? 
