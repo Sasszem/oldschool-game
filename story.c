@@ -7,8 +7,6 @@ uint8_t alarm_uses;
 
 GAction on_boss_enter(GameState *state) {
         if (invalid_id(state->current_level, N_LEVELS)) return 0;
-
-        if (state->current_level != 3) return 0; // should never trigger
         alarm_uses = 0;
         return 0;
 }
@@ -36,11 +34,11 @@ void print_flag() {
         // Open file
         int c;
         fptr = fopen("flag", "r");
-        printf("\e[30m");
+        // printf("\e[30m");
         // Read contents from file
         while ((c = fgetc(fptr)) != EOF)
                 putc(c, stdout);
-        printf("\e[39m");
+        // printf("\e[39m");
         fflush(stdout);
         fclose(fptr);
 }
