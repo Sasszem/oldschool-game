@@ -114,7 +114,7 @@ GAction get_flag(GameState *state, const char* item) {
         clrscr();
         const char* f = "       ";
         const char* form = " |\e[%dm%s\e[49m\n";
-        printf("Here, enjoy your flag{\n");
+        printf("Here, enjoy your flag: SECURITEAM{\n");
         printf(form, 41, f);
         printf(form, 47, f);
         printf(form, 42, f);
