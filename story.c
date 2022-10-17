@@ -34,6 +34,10 @@ void print_flag() {
         // Open file
         int c;
         fptr = fopen("flag", "r");
+        if (fptr == NULL) {
+                printf("Missing flag file.\n");
+                return;
+        }
         // printf("\e[30m");
         // Read contents from file
         while ((c = fgetc(fptr)) != EOF)
@@ -44,6 +48,10 @@ void print_flag() {
 }
 
 GAction use_alarm(GameState*state) {
+        if (levels[state->current_level - 1].on_display != on_boss_display) {
+                printf("Nothing happened.\n");
+                return GA_NOP;
+        }
         switch (++alarm_uses) {
                 case 1:
                         printf("[Vampire] Zzzzzz\n");

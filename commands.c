@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <strings.h>
+#include <unistd.h>
 
 #include "data.h"
 #include "util.h"
@@ -111,6 +112,11 @@ GAction load_game(GameState *state, const char* item) {
 }
 
 GAction get_flag(GameState *state, const char* item) {
+        //Test if flag file is present.
+        if (access("flag", F_OK) != 0) {
+                printf("Missing flag file.\n");
+                return;
+        }
         clrscr();
         const char* f = "       ";
         const char* form = " |\e[%dm%s\e[49m\n";

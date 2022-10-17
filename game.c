@@ -229,5 +229,5 @@ int main(int argc, char** argv) {
                 }
         }
 
-        quit:
+        quit: return 0;
 }
